@@ -42,7 +42,6 @@ public class OmaLista<E> extends LinkedList<E> implements Ooperoiva<E> {
             boolean jatketaan = true;
             while (jatketaan && i < size()) {
                 if (uusiAlkio.compareTo(get(i)) < 0) {
-                    System.out.println(uusi);
                     add(i, uusi);
                     jatketaan = false;
                 }  
@@ -53,6 +52,16 @@ public class OmaLista<E> extends LinkedList<E> implements Ooperoiva<E> {
                 addLast(uusi);
             }
         } 
-    } 
+    }
+    
+    public void poista(E poistettava) {
+        // Käydään kokoelma läpi, ja poistetaan
+        for (int j = 0; j < size(); j = j + 1) {
+            if (get(j) == poistettava) {
+                remove(j);
+                j = j - 1;
+            }
+        }
+    }
 }
 
