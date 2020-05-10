@@ -11,7 +11,7 @@ public class Oope2HT {
         // Luodaan käyttöliittymä
         Kayttoliittyma käyttöliittymä = new Kayttoliittyma();
         // Suoritetaan käyttöliittymä
-        käyttöliittymä.suorita();
+        käyttöliittymä.suorita(args);
         
     }
 }
