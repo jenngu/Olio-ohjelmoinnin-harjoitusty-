@@ -9,32 +9,51 @@ import java.util.LinkedList;
 
 
 /**
- *
- * @author jennifernguyen
+ * Abstrakti luokka, joka toteuttaa Tietoinen- ja Comparable-rajapinnat
+ * <p>
+ * Harjoitustyö, Olio-ohjelmoinnin perusteet II, 2020
+ * <p>
+ * @author jennifernguyen, (jennifer.nguyen@tuni.fi)
+ * Informaatioteknologian ja viestinnän tiedekunta,
+ * Tampereen yliopisto
  */
 public  abstract class Dokumentti implements Tietoinen<Dokumentti>, Comparable<Dokumentti> {
     // tunniste-attribuutti on dokumentin tunnisteluku
     private int tunniste;
     // teksti-attribuutti säilöö Dokumentin tekstin
     private String teksti;
-   
-    // Parametrillinen rakentaja, joka käyttää asettavia aksessoreita
+    
+    /**
+     * Parametrillinen rakentaja, joka käyttää asettavia aksessoreita
+     * @param id tunniste
+     * @param uusiTeksti
+     * @throws IllegalArgumentException, parametrit ovat virheellisiä
+     */
     public Dokumentti(int id, String uusiTeksti) throws IllegalArgumentException {
         tunniste(id);
         teksti(uusiTeksti);
     }
     
-    // Luetaan tunniste
+    /**
+     * Dokumentin tunnisteen lukeva aksessori
+     * @return int-tyyppinen tunniste
+     */ 
     public int tunniste() {
         return tunniste; 
     }
-    // Luetaan teksti
+    /**
+     * Dokumentin tekstin lukeva aksessori
+     * @return String-tyyppinen teksti
+     */ 
     public String teksti() {
         return teksti;
     }
     
-    // Aksessorit heittävät 
-    // poikkeuksen, jos parametrina on virheellinen arvo
+    /**
+     * Tunnisteen asettava aksessori
+     * @param id tunniste
+     * @throws IllegalArgumentException, parametrina on virheellinen arvo
+     */
     public void tunniste(int id) throws IllegalArgumentException {
         if (id <= 0) {
             throw new IllegalArgumentException("Error"); 
@@ -43,6 +62,11 @@ public  abstract class Dokumentti implements Tietoinen<Dokumentti>, Comparable<D
             tunniste = id;
         }      
     }
+    /**
+     * Uuden teksti asettava aksessori
+     * @param uusiTeksti 
+     * @throws IllegalArgumentException, parametrina on virheellinen arvo
+     */
     public void teksti(String uusiTeksti) throws IllegalArgumentException {
         if (uusiTeksti == null || uusiTeksti.length() <= 0) {
             throw new IllegalArgumentException("Error");
@@ -52,15 +76,22 @@ public  abstract class Dokumentti implements Tietoinen<Dokumentti>, Comparable<D
         }
     }
     
-    // Object-luokan toString-metodi
+    /**
+    * Object-luokan korvattu toString-metodi
+    * @return String-tyyppinen sisältö
+    */
     @Override
     public String toString() {
         // Palautetaan tunniste ja teksti ///-erotettuna
         return tunniste +  "///" + teksti ;
     }
     
-    // Object-luokan equals-metodi, joka katsaa dokumentit 
-    // samoiksi tunnisteiden perusteella
+    /**
+    * Object-luokan equals metodi, joka katsoo dokumentit 
+    * samoiksi tunnisteiden perusteella
+    * @param o parametrina saatu olio, jota halutaan verrata.
+    * @return true, jos nimet ovat samat, muuten false.
+    */
     @Override
     public boolean equals(Object o) {
         if (o == this) {
@@ -72,7 +103,14 @@ public  abstract class Dokumentti implements Tietoinen<Dokumentti>, Comparable<D
         return false;
     }
     
-    // Comparable<T>-rajapinnan compareTo-metodi, joka vertaa tunnisteita
+    /**
+    * Comparable-rajapinnan compareTo-metodi,
+    * joka vertaa olioiden tunnisteita keskenään.
+    * @param t Dokumentti tyyppinen parametri
+    * @return 1, jos olio > parametrina saatu olio, 
+    * 0, jos olio == parametrina saatu olio ja 
+    * -1, jos tämä olio on pienempi kuin parametrina saatu olio.
+    */
     @Override
     public int compareTo(Dokumentti t) {
         // Kun vertailtavat ovat samat
@@ -88,9 +126,10 @@ public  abstract class Dokumentti implements Tietoinen<Dokumentti>, Comparable<D
     }
     
      /**
-     *
-     * @param hakusanat
-     * 
+     * Tietoinen-rajapinnan metodi, joka käy läpi halutut hakusanat dokumentin sisältöön
+     * ja palauttaa boolen arvon, jos kaikki hakusanat löytyvät dokumentin tekstistä
+     * @param hakusanat 
+     * @return true, jos sanat täsmäävät ja false, jos ei
      * @throws IllegalArgumentException
      */
     //SanatTäsmäävät-metodi
@@ -100,6 +139,7 @@ public  abstract class Dokumentti implements Tietoinen<Dokumentti>, Comparable<D
             throw new IllegalArgumentException();
         }
         else {
+
             int laskuri = 0;
             for (int i = 0; i < hakusanat.size(); i = i + 1) {
                 // Jos sana löytyy tekstistä, niin lisätään laskuriin + 1
@@ -116,6 +156,7 @@ public  abstract class Dokumentti implements Tietoinen<Dokumentti>, Comparable<D
                     }
                 }
             }
+
             // Kun on käyty hakusanalista läpi, katsotaan löytyikö jokainen listan sana tekstistä
             if (laskuri == hakusanat.size()) {
                 return true;
@@ -127,10 +168,11 @@ public  abstract class Dokumentti implements Tietoinen<Dokumentti>, Comparable<D
     } 
     
     /**
-     *
-     * @param sulkusanat
-     * @param välimerkit
-     * 
+     * Tietoinen-rajapinnan metodi, joka siivoa dokumentin tekstin välimerkeistä
+     * sulkumerkeistä ja poistaa isot alkukirjaimet
+     * @param sulkusanat tulevat tekstitiedoston mukana
+     * @param välimerkit tulevat käyttäjältä
+     *  
      * @throws IllegalArgumentException
      */
     // Siivoa-metodi

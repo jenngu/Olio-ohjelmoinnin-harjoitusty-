@@ -15,28 +15,57 @@ import java.util.LinkedList;
 import java.util.Scanner;
 
 /**
- *
- * @author jennifernguyen
+ * Kokoelma-luokka, joka toteuttaa Kokoava-rajapinnan.
+ * Luokka saa komentoja Kayttoliittyma-luokalta suoritettavaksi.
+ * Lisäksi sen tehtävänä on hallinnoida kokoelmia.
+ * Se kutsuu Dokumentti- ja OmaLista-luokan metodeja avuksi.
+ * <p>
+ * Harjoitustyö, Olio-ohjelmoinnin perusteet II, 2020
+ * <p>
+ * @author jennifernguyen, (jennifer.nguyen@tuni.fi)
+ * Informaatioteknologian ja viestinnän tiedekunta,
+ * Tampereen yliopisto
  */
-// Kokoelmien hallinnointi
 public class Kokoelma implements Kokoava<Dokumentti> {
     // dokumentti-attribuutti, joka sisältää viitteet kokoelmaan kuuluviin dokumenttiolioihin
     private OmaLista<Dokumentti> dokumentit;
     
-    // Oletusrakentaja, jossa dokumentit-attribuuttiin liitetään rakentajassa luotu tyhjä listaolio  
+    /**
+     * Oletusrakentaja, jossa dokumentit-attribuuttiin liitetään rakentajassa luotu tyhjä listaolio 
+     */
     public Kokoelma() {
         dokumentit = new OmaLista<Dokumentti>();
     }
     
-    // Lukeva aksessori
+    /**
+    * Dokumentit lukeva aksessori
+    * @return dokumentit 
+    */
     public OmaLista<Dokumentti> dokumentit() {
         return dokumentit;
     }
   
+    /**
+     * Kokoava-rajapinnan lisää()-metodi, joka tekee virhekäsittelyn 
+     * uudelle dokumentille.
+     * Jos dokumentti kelpaa, niin kutsutaan OmaListan metodia
+     * @param uusi 
+     * @throws IllegalArgumentException jos parametri virheellinen
+     */
     // Toteutetaan Kokoava-rajapinnan metodit
     // Kokoava-rajapinnan lisää()-metodi
     @Override
     public void lisää(Dokumentti uusi) throws IllegalArgumentException {
+        //System.out.println("lopp");
+        //if (uusi instanceof Uutinen) {
+          //  System.out.println("jee");
+        //}
+        //else {
+          //  System.out.println("noup");
+        //}
+        //if (kokoelma.lataaTiedosto() instanceof Vitsi) {
+          //  System.out.println("jee2");
+        //}
         // Jos uusi dokumentti on null tai ei ole vertailtava, heitetään poikkeus
         if (uusi == null || !(uusi instanceof Comparable)) {
             throw new IllegalArgumentException("");
@@ -44,7 +73,12 @@ public class Kokoelma implements Kokoava<Dokumentti> {
         // Jos uusi dokumentti on jo kokoelmassa, heitetään poikkeus 
         else if (uusi.equals(dokumentit)){
            throw new IllegalArgumentException("");
-        }    
+        }  
+        // Jos parametrista voidaan luoda Uutinen vaikka kokoelma koostuu vitseistä,
+        // keskeytetään lisäys
+        //else if ((uusi instanceof Uutinen) && (dokumentit instanceof Vitsi)) {
+          //  throw new IllegalArgumentException("");
+        //}   
         // Jos uusi tunniste on sama kuin jo kokoelmassa oleva tunniste, heitetään poikkeus  
         else {
             for (int i = 0; i < dokumentit.size(); i = i + 1) {
@@ -55,11 +89,11 @@ public class Kokoelma implements Kokoava<Dokumentti> {
         }
         // Muuten lisätään, uusi dokumentti kokoelmaan
         dokumentit.lisää(uusi);
-        
     }
     
     /**
-     * 
+     * Metodi poistaa halutun alkio tunnisteen perusteella.
+     * Jos tunniste on kelvollinen, kutsutaan OmaLista-metodia
      * @param tunniste
      * @throws IllegalArgumentException 
      */
@@ -74,9 +108,10 @@ public class Kokoelma implements Kokoava<Dokumentti> {
     }
     
     /**
-     * 
-     * @param tunniste
-     * @return tunniste
+     * Kokoava-rajapinnan metodi, joka hakee dokumentin kokoelmasta, jonka tunniste on sama 
+     * kuin annetun parametrin.
+     * @param tunniste jota verrataan
+     * @return dokumentti, joka löytyy tunnisteen perusteella
      * @throws IllegalArgumentException 
      */
     // Kokoava-rajapinnan hae()-metodi
@@ -105,38 +140,9 @@ public class Kokoelma implements Kokoava<Dokumentti> {
     }
     
     /**
-     * 
-     * @param tunniste
-     * @return
-     * @throws IllegalArgumentException 
-     */
-    public Dokumentti tulosta(int tunniste) throws IllegalArgumentException {
-        if (tunniste <= 0) {
-            return null;
-        }
-        else {
-            int i = 0;
-            boolean lippu = true;
-            while (i < dokumentit.size() && lippu) {
-                if (tunniste == dokumentit.get(i).tunniste()) {
-                    lippu = false; 
-                    return dokumentit.get(i);
-                    
-                }
-            i = i + 1;
-            } 
-            // Jos viitettä ei löytynyt, palautetaan null
-            if (lippu == true) {
-                return null;
-            }
-        }
-        return null;
-    }
-    
-    /**
-     * 
-     * @param sulkusanat
-     * @param välimerkit
+     * Metodi kutsuu Dokumentti-luokan siivoa-metodia
+     * @param sulkusanat tiedostosta saadut
+     * @param välimerkit käyttäjältä saadut
      * @throws IllegalArgumentException 
      */
     public void siivoa(LinkedList<String> sulkusanat, String välimerkit) {
@@ -146,7 +152,7 @@ public class Kokoelma implements Kokoava<Dokumentti> {
     }
     
      /**
-     *
+     * Ladataan tiedosto linkitettyyn listaan, joka on komentoriviparametrissa
      * @param args
      * @return boolean arvo onnistuiko lataus
      */
@@ -184,7 +190,8 @@ public class Kokoelma implements Kokoava<Dokumentti> {
     }
     
     /**
-     * 
+     * Ladataan sulkusanalista linkitettyyn listaan, 
+     * joka saadaan tekstitiedostona komentoriviparametrina
      * @param args
      * @return sulkusanalista
      */
@@ -206,9 +213,10 @@ public class Kokoelma implements Kokoava<Dokumentti> {
     }
 
     /**
-     * 
-     * @param osat
-     * @return 
+     * Metodilla toteutetaan find-komento, joka etsii hakusanan tai -sanojen perusteella
+     * dokumentit, jossa nämä sanat esiintyvät 
+     * @param osat hakusanat 
+     * @return linkitetty lista dokumenttien tunnisteita, joissa sanat on löydetty
      */
     public LinkedList<Integer> etsi(String[] osat) {
         // Luodaan lista hakusanoille
@@ -219,6 +227,7 @@ public class Kokoelma implements Kokoava<Dokumentti> {
         int i = 1;
         while (i < osat.length) {  
             hakusanat.add(osat[i]);
+            i = i + 1;
         }
         // Kutsutaan Kokoelma-luokan SanatTäsmäävät-metodia
         for (Dokumentti dokumentti: dokumentit) {

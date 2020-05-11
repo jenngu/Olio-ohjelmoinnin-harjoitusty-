@@ -9,18 +9,26 @@ import java.util.LinkedList;
 import harjoitustyo.apulaiset.*;
 
 /**
- *
- * @author jennifernguyen
- * @param <E>
+ * OmaLista-luokka, joka perityy LinkedList-luokasta ja toteuttaa Ooperoiva-rajapinnan.
+ * Luokassa tapahtuu alkioiden lisäys ja poisto kokelmasta.
+ * <p>
+ * @param <E> tyyppi, joka perityy LinkedLististä
+ * <p>   
+ * Harjoitustyö, Olio-ohjelmoinnin perusteet II, 2020
+ * <p>
+ * @author jennifernguyen, (jennifer.nguyen@tuni.fi)
+ * Informaatioteknologian ja viestinnän tiedekunta,
+ * Tampereen yliopisto
  */
 public class OmaLista<E> extends LinkedList<E> implements Ooperoiva<E> {
-    /* 
-    * Metodi lisää alkion listalle siten, että alkio sijoittuu kaikkien itseään pienempien tai yhtä suurien
-    * alkioiden jälkeen ja ennen kaikkia itseään suurempia alkioita. 
+    /** 
+    * Metodi lisää alkion listalle siten, että alkio sijoittuu kaikkien itseään pienempien tai 
+    * yhtä suurien alkioiden jälkeen ja ennen kaikkia itseään suurempia alkioita.
+    * @param uusi alkio, joka halutaan lisätä kokoelmaan
     */
     @SuppressWarnings({"unchecked"})
     @Override
-    public void lisää(E uusi) throws IllegalArgumentException {
+    public void lisää(E uusi) {
         // Tarkistetaan parametri
         if (uusi == null || !(uusi instanceof Comparable)) {
             throw new IllegalArgumentException("");
@@ -54,6 +62,10 @@ public class OmaLista<E> extends LinkedList<E> implements Ooperoiva<E> {
         } 
     }
     
+    /**
+     * Metodissa poistetaan parametrina saatu alkio kokoelmasta
+     * @param poistettava 
+     */ 
     public void poista(E poistettava) {
         // Käydään kokoelma läpi, ja poistetaan
         for (int j = 0; j < size(); j = j + 1) {

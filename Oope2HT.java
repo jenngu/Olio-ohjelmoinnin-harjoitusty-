@@ -2,9 +2,13 @@
 import harjoitustyo.toiminnot.Kayttoliittyma;
 
 /*
- * Oopen ajoluokka, jossa kutsutaan Käyttöliittymä-luokkaa 
+ * Harjoitustyön ajoluokka, jossa kutsutaan Käyttöliittymä-luokkaa 
  * <p>
- * @author jennifernguyen
+ * Harjoitustyö, Olio-ohjelmoinnin perusteet II, 2020
+ * <p>  
+ * @author jennifernguyen, (jennifer.nguyen@tuni.fi)
+ * Informaatioteknologian ja viestinnän tiedekunta,
+ * Tampereen yliopisto
  */
 public class Oope2HT {
     public static void main(String[]args){

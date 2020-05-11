@@ -14,8 +14,14 @@ import java.util.Scanner;
 import java.util.LinkedList;
 
 /**
- *
- * @author jennifernguyen
+ * Käyttöliittymä-luokka, jossa luetaan käyttäjältä komentoja koskien dokumentteja. 
+ * Komentojen perusteella kutsutaan Kokoelma-luokkaa ja toteutetaan komentojen käskyt
+ * <p>
+ * Harjoitustyö, Olio-ohjelmoinnin perusteet II, 2020
+ * <p>
+ * @author jennifernguyen, (jennifer.nguyen@tuni.fi)
+ * Informaatioteknologian ja viestinnän tiedekunta,
+ * Tampereen yliopisto
  */
 public class Kayttoliittyma {
     // Vakioidaan komennot
@@ -24,13 +30,13 @@ public class Kayttoliittyma {
     public static final String PRINT = "print";
     public static final String REMOVE = "remove";
     public static final String ECHO = "echo";
-    public static final String RESET = "polish";
+    public static final String RESET = "reset";
     public static final String POLISH = "polish";
     public static final String QUIT = "quit";
     public static final String ERROR = "Error!";
     
     /**
-     * 
+     * Metodi, joka suorittaa komentojen kyselyn ja niiden suorittamisen
      * @param args 
      */
     public void suorita(String args[]) {
@@ -75,9 +81,19 @@ public class Kayttoliittyma {
                         System.out.println("Program terminated.");
                         aja = false; 
                     }
+                    // Tulosten kaiuttaminen        
+                    else if (komento.startsWith(ECHO)) {
+                        if (echo == false) {
+                            echo = true;
+                            System.out.println(ECHO);
+                        }
+                        // Jos kauitus päällä, kytketään se pois
+                        else {
+                            echo = false;
+                        }
+                    }
                     // Dokumentin lisääminen kokoelmaan
                     else if (komento.startsWith(ADD) && osat.length == 2) {
-                        osat = komento.split(" ", 2);
                         // Jos komento on oikeanlainen, niin kutsutaan Kokoelma-luokan lisää-metodia
                         if (kay(osat[1])) {
                             try {
@@ -85,16 +101,16 @@ public class Kayttoliittyma {
                                 String[] dokupalat = osat[1].split("///");
                                 // Muutetaan päivämäärä oikeean muotoon
                                 DateTimeFormatter pvm = DateTimeFormatter.ofPattern("d.M.yyyy");
-                        
                                 // Kutustaan Kokoelma-luokan lisää-metodia
                                 if (args[0].split("_")[0].equals("jokes")) {
                                     Vitsi uusivitsi = new Vitsi(Integer.parseInt(dokupalat[0]), 
-                                        dokupalat[1], dokupalat[2]);
-                                    kokoelma.lisää(uusivitsi);
+                                    dokupalat[1], dokupalat[2]);
+                                    kokoelma.lisää(uusivitsi); 
                                 }                    
                                 else if (args[0].split("_")[0].equals("news")) {
                                     Uutinen uusiuutinen = new Uutinen(Integer.parseInt(dokupalat[0]), 
                                         LocalDate.parse(dokupalat[1], pvm), dokupalat[2]);
+                                        kokoelma.lisää(uusiuutinen);
                                 }
                             }
                             catch (Exception e) {
@@ -105,12 +121,11 @@ public class Kayttoliittyma {
                     // Kokoelmasta hakeminen
                     else if (komento.startsWith(FIND) && osat.length == 2) {
                         // Jos komento oikenalainen, kutsutaan kokoelma-luokan hae-metodia
-                        osat = komento.split(" ", 2);
                         if (kay(osat[0])) {
                             try {
                                 // Luodaan lista, johon talletetaan kaikki löydetyt samat tunnisteet
                                 LinkedList<Integer> löydetyt = new LinkedList<Integer>();
-                                löydetyt = kokoelma.etsi(osat);                        
+                                löydetyt = kokoelma.etsi(osat);  
                                 if (löydetyt.size() > 0) {
                                     for (int i = 0; i< löydetyt.size(); i = i + 1) {
                                         System.out.println(löydetyt.get(i));
@@ -123,29 +138,29 @@ public class Kayttoliittyma {
                         }     
                     }
                     // Dokumenttien tulostaminen 
-                    else if (komento.startsWith(PRINT) && osat.length > 1) {//(osat.length == 1 || osat.length == 2)) {
-                        osat = komento.split(" ", 2);
+                    else if (komento.startsWith(PRINT) && osat.length >= 1) {
                         if (kay(osat[0])) {
                             try {
-                                int tunniste = Integer.parseInt(osat[1]);
-                                if (kokoelma.hae(tunniste) != null) {
-                                    System.out.println(kokoelma.hae(tunniste));
-                                }
-                                // Jos tunniste ei löydy kokoelmasta
-                                else if (kokoelma.hae(tunniste) == null) {
-                                    System.out.println(ERROR);
-                                }
-                                // Jos osat.length == 1, tulostetaan kaikki kokoelman dokumentit
-                                else {
+                                // Jos komento on pelkkä print, tulostetaan koko dokumentti
+                                if (komento.startsWith(PRINT) && osat.length == 1) {
                                     for (int i = 0; i < kokoelma.dokumentit().size(); i = i + 1) {
                                         System.out.println(kokoelma.dokumentit().get(i));
                                     }
                                 }
+                                else if (komento.startsWith(PRINT) && osat.length == 2) {
+                                    int tunniste = Integer.parseInt(osat[1]);
+                                    if (kokoelma.hae(tunniste) == null) {
+                                        System.out.println(ERROR);
+                                    }
+                                    else {
+                                        System.out.println(kokoelma.hae(tunniste));
+                                    }    
+                                }
                             }   
-                            catch (Exception e) {
+                           catch (Exception e) {
                                 System.out.println(ERROR);
                             }
-                        }  
+                        } 
                     }
                     // Dokumentin poistaminen
                     else if (komento.startsWith(REMOVE) && osat.length == 2) {
@@ -179,22 +194,11 @@ public class Kayttoliittyma {
                         }
                     }     
                     // Kokoelman muutosten peruminen
-                     else if (komento.startsWith(RESET) && komento.length() == 5) { 
+                    else if (komento.startsWith(RESET) && osat.length == 1) { 
                         // Ladataan alkuperäinen tiedosto uudelleen
                         kokoelma = new Kokoelma();
                         kokoelma.lataaTiedosto(args);
-                    } 
-                    // Tulosten kaiuttaminen        
-                    else if (komento.startsWith(ECHO)) {
-                        if (echo == false) {
-                            echo = true;
-                            System.out.println(ECHO);
-                        }
-                        // Jos kauitus päällä, kytketään se pois
-                        else {
-                            echo = false;
-                        }  
-                    } 
+                    }  
                     // Komento on jokin muu
                     else {
                         System.out.println(ERROR);
@@ -204,9 +208,9 @@ public class Kayttoliittyma {
         }
     }    
     /**
-     * 
+     * Metodi tarkistaa, että käyttäjän antama komento on oikeanlainen
      * @param osa
-     * @return
+     * @return true, jos komento käy, muuten false
      */
     // Tarkistetaan syötteen oikeellisuus
     public boolean kay(String osa) {
