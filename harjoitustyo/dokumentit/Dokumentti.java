@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -26,8 +27,8 @@ public  abstract class Dokumentti implements Tietoinen<Dokumentti>, Comparable<D
     /**
      * Parametrillinen rakentaja, joka käyttää asettavia aksessoreita
      * @param id tunniste
-     * @param uusiTeksti
-     * @throws IllegalArgumentException, parametrit ovat virheellisiä
+     * @param uusiTeksti teksti dokumentille
+     * @throws IllegalArgumentException jos parametrit ovat virheellisiä
      */
     public Dokumentti(int id, String uusiTeksti) throws IllegalArgumentException {
         tunniste(id);
@@ -52,7 +53,7 @@ public  abstract class Dokumentti implements Tietoinen<Dokumentti>, Comparable<D
     /**
      * Tunnisteen asettava aksessori
      * @param id tunniste
-     * @throws IllegalArgumentException, parametrina on virheellinen arvo
+     * @throws IllegalArgumentException parametrina on virheellinen arvo
      */
     public void tunniste(int id) throws IllegalArgumentException {
         if (id <= 0) {
@@ -64,8 +65,8 @@ public  abstract class Dokumentti implements Tietoinen<Dokumentti>, Comparable<D
     }
     /**
      * Uuden teksti asettava aksessori
-     * @param uusiTeksti 
-     * @throws IllegalArgumentException, parametrina on virheellinen arvo
+     * @param uusiTeksti asetetaan uusi teksti dokumentille
+     * @throws IllegalArgumentException parametrina on virheellinen arvo
      */
     public void teksti(String uusiTeksti) throws IllegalArgumentException {
         if (uusiTeksti == null || uusiTeksti.length() <= 0) {
@@ -77,9 +78,9 @@ public  abstract class Dokumentti implements Tietoinen<Dokumentti>, Comparable<D
     }
     
     /**
-    * Object-luokan korvattu toString-metodi
-    * @return String-tyyppinen sisältö
-    */
+     * Object-luokan korvattu toString-metodi
+     * @return String-tyyppinen sisältö
+     */
     @Override
     public String toString() {
         // Palautetaan tunniste ja teksti ///-erotettuna
@@ -87,11 +88,11 @@ public  abstract class Dokumentti implements Tietoinen<Dokumentti>, Comparable<D
     }
     
     /**
-    * Object-luokan equals metodi, joka katsoo dokumentit 
-    * samoiksi tunnisteiden perusteella
-    * @param o parametrina saatu olio, jota halutaan verrata.
-    * @return true, jos nimet ovat samat, muuten false.
-    */
+     * Object-luokan equals metodi, joka katsoo dokumentit 
+     * samoiksi tunnisteiden perusteella
+     * @param o parametrina saatu olio, jota halutaan verrata.
+     * @return true, jos nimet ovat samat, muuten false.
+     */
     @Override
     public boolean equals(Object o) {
         if (o == this) {
@@ -104,13 +105,13 @@ public  abstract class Dokumentti implements Tietoinen<Dokumentti>, Comparable<D
     }
     
     /**
-    * Comparable-rajapinnan compareTo-metodi,
-    * joka vertaa olioiden tunnisteita keskenään.
-    * @param t Dokumentti tyyppinen parametri
-    * @return 1, jos olio > parametrina saatu olio, 
-    * 0, jos olio == parametrina saatu olio ja 
-    * -1, jos tämä olio on pienempi kuin parametrina saatu olio.
-    */
+     * Comparable-rajapinnan compareTo-metodi,
+     * joka vertaa olioiden tunnisteita keskenään.
+     * @param t Dokumentti tyyppinen parametri
+     * @return 1, jos olio on suurempi parametrina saatu olio, 
+     * 0, jos olio on yhtä suuri parametrina saatu olio ja 
+     * -1, jos tämä olio on pienempi kuin parametrina saatu olio.
+     */
     @Override
     public int compareTo(Dokumentti t) {
         // Kun vertailtavat ovat samat
@@ -125,71 +126,64 @@ public  abstract class Dokumentti implements Tietoinen<Dokumentti>, Comparable<D
         }
     }
     
-     /**
+    /**
      * Tietoinen-rajapinnan metodi, joka käy läpi halutut hakusanat dokumentin sisältöön
      * ja palauttaa boolen arvon, jos kaikki hakusanat löytyvät dokumentin tekstistä
-     * @param hakusanat 
+     * @param hakusanat, jotka käyttäjä on määrittänyt
      * @return true, jos sanat täsmäävät ja false, jos ei
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException jos parametri on virheellinen
      */
-    //SanatTäsmäävät-metodi
     @Override
     public boolean sanatTäsmäävät(LinkedList<String> hakusanat) throws IllegalArgumentException {
         if (hakusanat == null || hakusanat.isEmpty()) {
             throw new IllegalArgumentException();
         }
-        else {
-
-            int laskuri = 0;
-            for (int i = 0; i < hakusanat.size(); i = i + 1) {
-                // Jos sana löytyy tekstistä, niin lisätään laskuriin + 1
-                if (teksti.trim().contains(hakusanat.get(i))) {
-                    //Tarkistetaan, onko annettu alkio kunnollinen sana vai esim. vain tavu
-                    if (hakusanat.get(i).length() == 2) {
-                        return false;
-                    }
-                    else if (hakusanat.get(i).charAt(2) == '.') {
-                        return false;
-                    }
-                    else {
-                        laskuri = laskuri + 1;
-                    }
+        // Luodaan taulukko, johon asetetaan tekstin sanat 
+        String[] sanat = teksti.split(" ");
+        // Alustetaan laskuri
+        int laskuri = 0;
+        for (int i = 0; i < hakusanat.size(); i = i + 1) { 
+            // Alustetaan samoja sanoja laskeva apumuuttuja
+            int samat = 0;
+            // Silmukka, joka käy läpi kaikki sanat-taulukon sanat
+            for (int j = 0; j < sanat.length; j = j + 1) {
+                if (hakusanat.get(i).equals(sanat[j])) {
+                    samat = samat + 1;
                 }
             }
-
-            // Kun on käyty hakusanalista läpi, katsotaan löytyikö jokainen listan sana tekstistä
-            if (laskuri == hakusanat.size()) {
-                return true;
+            if (samat > 0) {
+                laskuri = laskuri + 1;
             }
-            else {
-                return false;
-            }
-        }    
+        }   
+        // Kun on käyty verailu läpi, katsotaan löytyikö jokainen listan sana tekstistä
+        if (laskuri == hakusanat.size()) {
+            return true;
+        }
+        else {
+            return false;
+        }
     } 
     
     /**
      * Tietoinen-rajapinnan metodi, joka siivoa dokumentin tekstin välimerkeistä
      * sulkumerkeistä ja poistaa isot alkukirjaimet
      * @param sulkusanat tulevat tekstitiedoston mukana
-     * @param välimerkit tulevat käyttäjältä
-     *  
-     * @throws IllegalArgumentException
+     * @param välimerkit tulevat käyttäjältä 
+     * @throws IllegalArgumentException jos parametrit ovat virheelliset
      */
-    // Siivoa-metodi
     @Override
     public void siivoa(LinkedList<String> sulkusanat, String välimerkit) throws IllegalArgumentException {
         if (sulkusanat == null || sulkusanat.isEmpty() || välimerkit == null || välimerkit.length() < 1) {
             throw new IllegalArgumentException();
         }
          else {
-            // Poistetaan tekstistä isot alkukirjaimet
-            teksti = teksti.replace("[^a-zA-Z ]", "").toLowerCase();
-            
             // Poistetaan välimerkit
             char[] ca = välimerkit.toCharArray();
             for (char c : ca) {
                 teksti = teksti.replace(""+c, "");
             }
+            // Poistetaan sitten tekstistä isot alkukirjaimet
+            teksti = teksti.replace("[^a-zA-Z ]", "").toLowerCase();
             
             // Hajotetaan teksti paloiksi
             String[] sanat = teksti().split(" "); 

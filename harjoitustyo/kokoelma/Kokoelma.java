@@ -15,9 +15,8 @@ import java.util.LinkedList;
 import java.util.Scanner;
 
 /**
- * Kokoelma-luokka, joka toteuttaa Kokoava-rajapinnan.
+ * Kokoelma-luokka, joka hallinnoi kokoelmia ja joka toteuttaa Kokoava-rajapinnan.
  * Luokka saa komentoja Kayttoliittyma-luokalta suoritettavaksi.
- * Lisäksi sen tehtävänä on hallinnoida kokoelmia.
  * Se kutsuu Dokumentti- ja OmaLista-luokan metodeja avuksi.
  * <p>
  * Harjoitustyö, Olio-ohjelmoinnin perusteet II, 2020
@@ -49,7 +48,7 @@ public class Kokoelma implements Kokoava<Dokumentti> {
      * Kokoava-rajapinnan lisää()-metodi, joka tekee virhekäsittelyn 
      * uudelle dokumentille.
      * Jos dokumentti kelpaa, niin kutsutaan OmaListan metodia
-     * @param uusi 
+     * @param uusi dokumentti
      * @throws IllegalArgumentException jos parametri virheellinen
      */
     // Toteutetaan Kokoava-rajapinnan metodit
@@ -94,8 +93,8 @@ public class Kokoelma implements Kokoava<Dokumentti> {
     /**
      * Metodi poistaa halutun alkio tunnisteen perusteella.
      * Jos tunniste on kelvollinen, kutsutaan OmaLista-metodia
-     * @param tunniste
-     * @throws IllegalArgumentException 
+     * @param tunniste dokumentin tunniste
+     * @throws IllegalArgumentException poikkeus, jos parametri virheellinen
      */
     public void poista(int tunniste) throws IllegalArgumentException {
        // Poistetaan tunnisteen perusteella dokumentti kokoelmasta
@@ -112,7 +111,7 @@ public class Kokoelma implements Kokoava<Dokumentti> {
      * kuin annetun parametrin.
      * @param tunniste jota verrataan
      * @return dokumentti, joka löytyy tunnisteen perusteella
-     * @throws IllegalArgumentException 
+     * @throws IllegalArgumentException poikkeus, jos parametri virheellinen
      */
     // Kokoava-rajapinnan hae()-metodi
     @Override
@@ -143,7 +142,7 @@ public class Kokoelma implements Kokoava<Dokumentti> {
      * Metodi kutsuu Dokumentti-luokan siivoa-metodia
      * @param sulkusanat tiedostosta saadut
      * @param välimerkit käyttäjältä saadut
-     * @throws IllegalArgumentException 
+     * @throws IllegalArgumentException heitetään poikkeus, jos parametrit virheellisiä
      */
     public void siivoa(LinkedList<String> sulkusanat, String välimerkit) {
         for (Dokumentti dokumentti: dokumentit) {
@@ -153,7 +152,7 @@ public class Kokoelma implements Kokoava<Dokumentti> {
     
      /**
      * Ladataan tiedosto linkitettyyn listaan, joka on komentoriviparametrissa
-     * @param args
+     * @param args komentoriviparametri
      * @return boolean arvo onnistuiko lataus
      */
     // Tiedoston lukeminen
@@ -192,7 +191,7 @@ public class Kokoelma implements Kokoava<Dokumentti> {
     /**
      * Ladataan sulkusanalista linkitettyyn listaan, 
      * joka saadaan tekstitiedostona komentoriviparametrina
-     * @param args
+     * @param args komentoriviparametri
      * @return sulkusanalista
      */
     public LinkedList<String> lataaSulkusanat(String[] args) {
@@ -219,26 +218,34 @@ public class Kokoelma implements Kokoava<Dokumentti> {
      * @return linkitetty lista dokumenttien tunnisteita, joissa sanat on löydetty
      */
     public LinkedList<Integer> etsi(String[] osat) {
-        // Luodaan lista hakusanoille
-        LinkedList<String> hakusanat = new LinkedList<String>();
         // Luodaan lista, johon kerätään löydetyt tunnisteet
         LinkedList<Integer> löydetyt = new LinkedList<Integer>();
-        // Käydään läpi komennon sanat itse komennon jälkeen ja lisätään ne listalle
-        int i = 1;
-        while (i < osat.length) {  
-            hakusanat.add(osat[i]);
-            i = i + 1;
-        }
-        // Kutsutaan Kokoelma-luokan SanatTäsmäävät-metodia
-        for (Dokumentti dokumentti: dokumentit) {
-            boolean tulos = dokumentti.sanatTäsmäävät(hakusanat);
-            if (tulos == true) {
-                // Jos sanat täsmäsivät, niin lisätään tunnisteet
-                löydetyt.add(dokumentti.tunniste());
+        try {
+            // Katkaistaan hakusanat
+            
+           // Luodaan lista hakusanoille
+            LinkedList<String> hakusanat = new LinkedList<String>();
+            // Käydään läpi komennon sanat itse komennon jälkeen ja lisätään ne listalle
+            int i = 1;
+            while (i < osat.length) {  
+                hakusanat.add(osat[i]);
+                i = i + 1;
             }
+            // Kutsutaan Kokoelma-luokan SanatTäsmäävät-metodia
+            for (Dokumentti dokumentti: dokumentit) {
+                boolean tulos = dokumentti.sanatTäsmäävät(hakusanat);
+                if (tulos == true) {
+                    // Jos sanat täsmäsivät, niin lisätään tunnisteet
+                    löydetyt.add(dokumentti.tunniste());
+                }
+            } 
+        }
+        catch (Exception e) {
+            
         }
         return löydetyt;
     }
 }  
     
+
 

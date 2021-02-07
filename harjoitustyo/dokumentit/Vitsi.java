@@ -20,7 +20,7 @@ public class Vitsi extends Dokumentti {
     * yliluokan rakentajaa.
     * Laji asetetaan kutsumalla lajin asettavan aksessorin
     * @param tunniste vitsille
-    * @param laji vitsille
+     * @param uusiLaji vitsille
     * @param teksti vitsille
     *
     * @throws IllegalArgumentException jos parametrit virheellisiä
@@ -32,11 +32,13 @@ public class Vitsi extends Dokumentti {
     
     /**
     * Lajin asettava aksessori
-    * @param laji vitsille
-    * @throws IllegalArgumentException, jos laji on viallinen
+     * @param l asetetaan uusi laji vitsille
+    * @throws IllegalArgumentException jos laji on parametrina viallinen
     */
     public void laji(String l) throws IllegalArgumentException {
-        if (l == null || l == ("")) {
+        // laji on viallinen, jos se jakaantuu pisteen kohdalta kolmeen osaan,
+        // kuten uutisen päivämäärä
+        if (l == null || l.length() < 1 || l.split("\\.").length ==3 ) {
             throw new IllegalArgumentException("Error");
         }
         else {
